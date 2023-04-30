@@ -1,3 +1,727 @@
 {
-  "db": "MySQL"
+    "db": "MySQL",
+    "305b0dcb60f7bfaff602eafc4fbab9dae7160cfe77c82eca9357abbfecf77641": {
+        "query": "select * from activities",
+        "describe": {
+            "columns": [
+                {
+                    "ordinal": 0,
+                    "name": "id",
+                    "type_info": {
+                        "type": "Long",
+                        "flags": {
+                            "bits": 515
+                        },
+                        "char_set": 63,
+                        "max_size": 11
+                    }
+                },
+                {
+                    "ordinal": 1,
+                    "name": "title",
+                    "type_info": {
+                        "type": "VarString",
+                        "flags": {
+                            "bits": 4097
+                        },
+                        "char_set": 224,
+                        "max_size": 1020
+                    }
+                },
+                {
+                    "ordinal": 2,
+                    "name": "email",
+                    "type_info": {
+                        "type": "VarString",
+                        "flags": {
+                            "bits": 0
+                        },
+                        "char_set": 224,
+                        "max_size": 1020
+                    }
+                },
+                {
+                    "ordinal": 3,
+                    "name": "created_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 4225
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 4,
+                    "name": "updated_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 5,
+                    "name": "deleted_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                }
+            ],
+            "parameters": {
+                "Right": 0
+            },
+            "nullable": [
+                false,
+                false,
+                true,
+                false,
+                true,
+                true
+            ]
+        }
+    },
+    "0f6b64a3836bbc3453852a63bc7a904b9b645ba0579baf9b67ea4712a1905b21": {
+        "query": "delete from todos where id = ?",
+        "describe": {
+            "columns": [],
+            "parameters": {
+                "Right": 1
+            },
+            "nullable": []
+        }
+    },
+    "57a1fa5ea40014a76e71b3a85806d24f55e4fa9f9fba1e1ed0085449bf44e8c7": {
+        "query": "select * from todos where id = ?",
+        "describe": {
+            "columns": [
+                {
+                    "ordinal": 0,
+                    "name": "id",
+                    "type_info": {
+                        "type": "Long",
+                        "flags": {
+                            "bits": 515
+                        },
+                        "char_set": 63,
+                        "max_size": 11
+                    }
+                },
+                {
+                    "ordinal": 1,
+                    "name": "activity_group_id",
+                    "type_info": {
+                        "type": "Long",
+                        "flags": {
+                            "bits": 4097
+                        },
+                        "char_set": 63,
+                        "max_size": 11
+                    }
+                },
+                {
+                    "ordinal": 2,
+                    "name": "title",
+                    "type_info": {
+                        "type": "VarString",
+                        "flags": {
+                            "bits": 4097
+                        },
+                        "char_set": 224,
+                        "max_size": 1020
+                    }
+                },
+                {
+                    "ordinal": 3,
+                    "name": "is_active",
+                    "type_info": {
+                        "type": "Tiny",
+                        "flags": {
+                            "bits": 1
+                        },
+                        "char_set": 63,
+                        "max_size": 1
+                    }
+                },
+                {
+                    "ordinal": 4,
+                    "name": "priority",
+                    "type_info": {
+                        "type": "String",
+                        "flags": {
+                            "bits": 257
+                        },
+                        "char_set": 224,
+                        "max_size": 36
+                    }
+                },
+                {
+                    "ordinal": 5,
+                    "name": "created_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 4225
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 6,
+                    "name": "updated_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 7,
+                    "name": "deleted_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                }
+            ],
+            "parameters": {
+                "Right": 1
+            },
+            "nullable": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                true
+            ]
+        }
+    },
+    "a27eb34d1e1791f225fda4f7a0ed296a3ffa05b054d6c683698e313e3c2aed99": {
+        "query": "select * from activities where id = ?",
+        "describe": {
+            "columns": [
+                {
+                    "ordinal": 0,
+                    "name": "id",
+                    "type_info": {
+                        "type": "Long",
+                        "flags": {
+                            "bits": 515
+                        },
+                        "char_set": 63,
+                        "max_size": 11
+                    }
+                },
+                {
+                    "ordinal": 1,
+                    "name": "title",
+                    "type_info": {
+                        "type": "VarString",
+                        "flags": {
+                            "bits": 4097
+                        },
+                        "char_set": 224,
+                        "max_size": 1020
+                    }
+                },
+                {
+                    "ordinal": 2,
+                    "name": "email",
+                    "type_info": {
+                        "type": "VarString",
+                        "flags": {
+                            "bits": 0
+                        },
+                        "char_set": 224,
+                        "max_size": 1020
+                    }
+                },
+                {
+                    "ordinal": 3,
+                    "name": "created_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 4225
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 4,
+                    "name": "updated_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 5,
+                    "name": "deleted_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                }
+            ],
+            "parameters": {
+                "Right": 1
+            },
+            "nullable": [
+                false,
+                false,
+                true,
+                false,
+                true,
+                true
+            ]
+        }
+    },
+    "69870700919cd1c1ae8edb3fbdddd08fd461338c49eae25c03d51602ec4979ed": {
+        "query": "select * from todos where activity_group_id = ?",
+        "describe": {
+            "columns": [
+                {
+                    "ordinal": 0,
+                    "name": "id",
+                    "type_info": {
+                        "type": "Long",
+                        "flags": {
+                            "bits": 515
+                        },
+                        "char_set": 63,
+                        "max_size": 11
+                    }
+                },
+                {
+                    "ordinal": 1,
+                    "name": "activity_group_id",
+                    "type_info": {
+                        "type": "Long",
+                        "flags": {
+                            "bits": 4097
+                        },
+                        "char_set": 63,
+                        "max_size": 11
+                    }
+                },
+                {
+                    "ordinal": 2,
+                    "name": "title",
+                    "type_info": {
+                        "type": "VarString",
+                        "flags": {
+                            "bits": 4097
+                        },
+                        "char_set": 224,
+                        "max_size": 1020
+                    }
+                },
+                {
+                    "ordinal": 3,
+                    "name": "is_active",
+                    "type_info": {
+                        "type": "Tiny",
+                        "flags": {
+                            "bits": 1
+                        },
+                        "char_set": 63,
+                        "max_size": 1
+                    }
+                },
+                {
+                    "ordinal": 4,
+                    "name": "priority",
+                    "type_info": {
+                        "type": "String",
+                        "flags": {
+                            "bits": 257
+                        },
+                        "char_set": 224,
+                        "max_size": 36
+                    }
+                },
+                {
+                    "ordinal": 5,
+                    "name": "created_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 4225
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 6,
+                    "name": "updated_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 7,
+                    "name": "deleted_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                }
+            ],
+            "parameters": {
+                "Right": 1
+            },
+            "nullable": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                true
+            ]
+        }
+    },
+    "614491e9fa96f1fcb94c72c9203d5131b5397b7ab17188643fa1bb4786cb702a": {
+        "query": "delete from activities where id = ?",
+        "describe": {
+            "columns": [],
+            "parameters": {
+                "Right": 1
+            },
+            "nullable": []
+        }
+    },
+    "0ed8e946f2f4c032e19acf93f550258091c201befbc1cf75ecad58df0bf35577": {
+        "query": "\n        insert into activities (title, email, created_at, updated_at)\n        values (?, ?, ?, ?)\n        ",
+        "describe": {
+            "columns": [],
+            "parameters": {
+                "Right": 4
+            },
+            "nullable": []
+        }
+    },
+    "ed25d52e2f9740b59f6ffc250ce2452ac13304b8281a5d885f5ef94b2031c23f": {
+        "query": "update todos set title = ?, activity_group_id = ?, is_active = ?, priority = ?, updated_at = ? where id = ?",
+        "describe": {
+            "columns": [],
+            "parameters": {
+                "Right": 6
+            },
+            "nullable": []
+        }
+    },
+    "95c244fe9c8d832e7698a1b5122b770867dcf662288267efe54a880dcf16b148": {
+        "query": "select * from todos  where id = ?",
+        "describe": {
+            "columns": [
+                {
+                    "ordinal": 0,
+                    "name": "id",
+                    "type_info": {
+                        "type": "Long",
+                        "flags": {
+                            "bits": 515
+                        },
+                        "char_set": 63,
+                        "max_size": 11
+                    }
+                },
+                {
+                    "ordinal": 1,
+                    "name": "activity_group_id",
+                    "type_info": {
+                        "type": "Long",
+                        "flags": {
+                            "bits": 4097
+                        },
+                        "char_set": 63,
+                        "max_size": 11
+                    }
+                },
+                {
+                    "ordinal": 2,
+                    "name": "title",
+                    "type_info": {
+                        "type": "VarString",
+                        "flags": {
+                            "bits": 4097
+                        },
+                        "char_set": 224,
+                        "max_size": 1020
+                    }
+                },
+                {
+                    "ordinal": 3,
+                    "name": "is_active",
+                    "type_info": {
+                        "type": "Tiny",
+                        "flags": {
+                            "bits": 1
+                        },
+                        "char_set": 63,
+                        "max_size": 1
+                    }
+                },
+                {
+                    "ordinal": 4,
+                    "name": "priority",
+                    "type_info": {
+                        "type": "String",
+                        "flags": {
+                            "bits": 257
+                        },
+                        "char_set": 224,
+                        "max_size": 36
+                    }
+                },
+                {
+                    "ordinal": 5,
+                    "name": "created_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 4225
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 6,
+                    "name": "updated_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 7,
+                    "name": "deleted_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                }
+            ],
+            "parameters": {
+                "Right": 1
+            },
+            "nullable": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                true
+            ]
+        }
+    },
+    "b8aa19b0842c43584c24b8ab44b24baa336e149a90687977dddca27f96ba4329": {
+        "query": "update activities set title = ? where id = ?",
+        "describe": {
+            "columns": [],
+            "parameters": {
+                "Right": 2
+            },
+            "nullable": []
+        }
+    },
+    "96278c192489a042fcd9d4b46d306379d822128a6c6edd87bd2cd706f3e4247c": {
+        "query": "update activities set title = ?, email = ? where id = ?",
+        "describe": {
+            "columns": [],
+            "parameters": {
+                "Right": 3
+            },
+            "nullable": []
+        }
+    },
+    "a1bebdfff31e5afbab92b50110e3e967437280f6e0511c37eb6c7e6597fc274b": {
+        "query": "update todos set updated_at = ? where id = ?",
+        "describe": {
+            "columns": [],
+            "parameters": {
+                "Right": 2
+            },
+            "nullable": []
+        }
+    },
+    "8088ac036ef6aad78e05e979c6b140f31196b71260073af8ec2fd2419e983d9f": {
+        "query": "\n        insert into todos (title, activity_group_id, is_active, priority, created_at, updated_at)\n        values (?, ?, ?, ?, ?, ?)\n        ",
+        "describe": {
+            "columns": [],
+            "parameters": {
+                "Right": 6
+            },
+            "nullable": []
+        }
+    },
+    "f8f0d95992a0843cccb391d91c12444fa998a1823557b98ece34778fd91390b9": {
+        "query": "select * from todos",
+        "describe": {
+            "columns": [
+                {
+                    "ordinal": 0,
+                    "name": "id",
+                    "type_info": {
+                        "type": "Long",
+                        "flags": {
+                            "bits": 515
+                        },
+                        "char_set": 63,
+                        "max_size": 11
+                    }
+                },
+                {
+                    "ordinal": 1,
+                    "name": "activity_group_id",
+                    "type_info": {
+                        "type": "Long",
+                        "flags": {
+                            "bits": 4097
+                        },
+                        "char_set": 63,
+                        "max_size": 11
+                    }
+                },
+                {
+                    "ordinal": 2,
+                    "name": "title",
+                    "type_info": {
+                        "type": "VarString",
+                        "flags": {
+                            "bits": 4097
+                        },
+                        "char_set": 224,
+                        "max_size": 1020
+                    }
+                },
+                {
+                    "ordinal": 3,
+                    "name": "is_active",
+                    "type_info": {
+                        "type": "Tiny",
+                        "flags": {
+                            "bits": 1
+                        },
+                        "char_set": 63,
+                        "max_size": 1
+                    }
+                },
+                {
+                    "ordinal": 4,
+                    "name": "priority",
+                    "type_info": {
+                        "type": "String",
+                        "flags": {
+                            "bits": 257
+                        },
+                        "char_set": 224,
+                        "max_size": 36
+                    }
+                },
+                {
+                    "ordinal": 5,
+                    "name": "created_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 4225
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 6,
+                    "name": "updated_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                },
+                {
+                    "ordinal": 7,
+                    "name": "deleted_at",
+                    "type_info": {
+                        "type": "Datetime",
+                        "flags": {
+                            "bits": 128
+                        },
+                        "char_set": 63,
+                        "max_size": 19
+                    }
+                }
+            ],
+            "parameters": {
+                "Right": 0
+            },
+            "nullable": [
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true,
+                true
+            ]
+        }
+    }
 }

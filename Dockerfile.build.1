@@ -1,0 +1,6 @@
+FROM iamwahidn/actix-todolist:base as builder
+
+WORKDIR /app
+COPY . .
+ENV SQLX_OFFLINE true
+RUN cargo build --config net.git-fetch-with-cli=true --release

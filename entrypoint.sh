@@ -9,7 +9,6 @@ done
 
 export DATABASE_URL=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DBNAME}
 
-sqlx database create
-sqlx migrate run
+mysql -h $MYSQL_HOST -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DBNAME < db.sql
 
 /app/zero2prod

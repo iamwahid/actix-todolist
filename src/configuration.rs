@@ -1,18 +1,18 @@
 use secrecy::{ExposeSecret, Secret};
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 pub struct Settings {
     pub database: DatabaseSettings,
     pub application: ApplicationSettings,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 pub struct ApplicationSettings {
     pub port: u16,
     pub host: String,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 pub struct DatabaseSettings {
     pub username: String,
     pub password: Secret<String>,
@@ -36,6 +36,12 @@ pub fn get_configuration() -> Result<Settings, config::ConfigError> {
     settings.merge(
         config::File::from(configuration_directory.join(environment.as_str())).required(true),
     )?;
+
+    settings.set("database.username", std::env::var("MYSQL_USER").unwrap_or_else(|_| "xxxx".into()))?;
+    settings.set("database.password", std::env::var("MYSQL_PASSWORD").unwrap_or_else(|_| "xxxxx".into()))?;
+    settings.set("database.host", std::env::var("MYSQL_HOST").unwrap_or_else(|_| "127.0.0.1".into()))?;
+    settings.set("database.port", std::env::var("MYSQL_PORT").unwrap_or_else(|_| "3306".into()))?;
+    settings.set("database.database_name", std::env::var("MYSQL_DBNAME").unwrap_or_else(|_| "todo4".into()))?;
 
     settings.try_into()
 }
