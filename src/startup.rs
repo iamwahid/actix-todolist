@@ -1,13 +1,15 @@
 use std::net::TcpListener;
 
-use actix_web::{web, App, HttpServer};
 use actix_web::dev::Server;
-use sqlx::{MySqlPool};
+use actix_web::{web, App, HttpServer};
+use sqlx::MySqlPool;
 
 use crate::routes::health_check;
 // use crate::routes::subscribe;
-use crate::routes::{activity_create, activity_list, activity_detail, activity_update, activity_destroy};
-use crate::routes::{todo_detail, todo_list, todo_create, todo_destroy, todo_update};
+use crate::routes::{
+    activity_create, activity_destroy, activity_detail, activity_list, activity_update,
+};
+use crate::routes::{todo_create, todo_destroy, todo_detail, todo_list, todo_update};
 use tracing_actix_web::TracingLogger;
 
 pub fn run(listener: TcpListener, pool: MySqlPool) -> Result<Server, std::io::Error> {

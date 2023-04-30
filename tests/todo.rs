@@ -1,11 +1,13 @@
 use once_cell::sync::Lazy;
 use secrecy::ExposeSecret;
-use std::{net::TcpListener};
-use zero2prod::telemetry::{get_subscriber, init_subscriber};
-use sqlx::{MySqlPool, Executor, MySqlConnection, Connection};
+use sqlx::{Connection, Executor, MySqlConnection, MySqlPool};
+use std::net::TcpListener;
 use uuid::Uuid;
-use zero2prod::{startup::run, configuration::{get_configuration, DatabaseSettings}};
-
+use zero2prod::telemetry::{get_subscriber, init_subscriber};
+use zero2prod::{
+    configuration::{get_configuration, DatabaseSettings},
+    startup::run,
+};
 
 static TRACING: Lazy<()> = Lazy::new(|| {
     let default_filter_level = "info".to_string();
@@ -18,7 +20,7 @@ static TRACING: Lazy<()> = Lazy::new(|| {
         init_subscriber(subscriber);
     };
 });
-    
+
 pub struct TestApp {
     pub address: String,
     pub db_pool: MySqlPool,
@@ -40,15 +42,16 @@ async fn spawn_app() -> TestApp {
 
     TestApp {
         address,
-        db_pool: connection_pool
+        db_pool: connection_pool,
     }
 }
 
 pub async fn configure_database(config: &DatabaseSettings) -> MySqlPool {
     // Create database
-    let mut connection = MySqlConnection::connect(&config.connection_string_without_db().expose_secret())
-        .await
-        .expect("Failed to connect to Postgres");
+    let mut connection =
+        MySqlConnection::connect(&config.connection_string_without_db().expose_secret())
+            .await
+            .expect("Failed to connect to Postgres");
 
     connection
         .execute(format!(r#"CREATE DATABASE "{}";"#, config.database_name).as_str())
@@ -118,7 +121,7 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
     let test_cases = vec![
         ("name=Niam", "missing the email"),
         ("email=iam.wahidn%40gmail.com", "missing the name"),
-        ("", "missing both email and name")
+        ("", "missing both email and name"),
     ];
 
     for (invalid_body, error_message) in test_cases {
@@ -130,7 +133,12 @@ async fn subscribe_returns_a_400_when_data_is_missing() {
             .send()
             .await
             .expect("Failed to execute the request");
-    
-        assert_eq!(400, response.status().as_u16(), "The API did not fail with 400 Bad Request when the payload was {}.", error_message);
+
+        assert_eq!(
+            400,
+            response.status().as_u16(),
+            "The API did not fail with 400 Bad Request when the payload was {}.",
+            error_message
+        );
     }
 }

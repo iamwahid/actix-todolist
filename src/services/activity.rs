@@ -1,18 +1,17 @@
+use crate::common::TitleField;
 use chrono::Utc;
 use sqlx::MySqlPool;
-use crate::common::TitleField;
 
 #[derive(serde::Serialize)]
 pub struct Activity {
     id: i32,
     title: String,
     email: Option<String>,
-    #[serde(rename="createdAt")]
+    #[serde(rename = "createdAt")]
     created_at: String,
-    #[serde(rename="updatedAt")]
-    updated_at: Option<String>
+    #[serde(rename = "updatedAt")]
+    updated_at: Option<String>,
 }
-
 
 pub struct NewActivity {
     pub title: TitleField,
@@ -24,32 +23,28 @@ pub struct UpdateActivity {
     pub email: Option<String>,
 }
 
-pub async fn get_activities(
-    pool: &MySqlPool,
-) -> Result<Vec<Activity>, sqlx::Error> {
+pub async fn get_activities(pool: &MySqlPool) -> Result<Vec<Activity>, sqlx::Error> {
     let query = sqlx::query!("select * from activities")
-    .fetch_all(pool)
-    .await
-    .map_err(|e| {
-        tracing::error!("Failed to execute query: {:?}", e);
-        e
-    })?;
+        .fetch_all(pool)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to execute query: {:?}", e);
+            e
+        })?;
 
     let mut activities = Vec::<Activity>::new();
 
     for q in query {
-        activities.push(
-            Activity { 
-                id: q.id,
-                title: q.title,
-                email: q.email,
-                created_at: q.created_at.to_string(),
-                updated_at: match q.updated_at {
-                    Some(updated_at) => Some(updated_at.to_string()),
-                    None => None
-                }
-            }
-        );
+        activities.push(Activity {
+            id: q.id,
+            title: q.title,
+            email: q.email,
+            created_at: q.created_at.to_string(),
+            updated_at: match q.updated_at {
+                Some(updated_at) => Some(updated_at.to_string()),
+                None => None,
+            },
+        });
     }
 
     Ok(activities)
@@ -60,12 +55,12 @@ pub async fn get_activity_by_id(
     pool: &MySqlPool,
 ) -> Result<Activity, sqlx::Error> {
     let query = sqlx::query!("select * from activities where id = ?", activity_id)
-    .fetch_one(pool)
-    .await
-    .map_err(|e| {
-        tracing::error!("Failed to execute query: {:?}", e);
-        e
-    })?;
+        .fetch_one(pool)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to execute query: {:?}", e);
+            e
+        })?;
 
     Ok(Activity {
         id: query.id,
@@ -74,8 +69,8 @@ pub async fn get_activity_by_id(
         created_at: query.created_at.to_string(),
         updated_at: match query.updated_at {
             Some(updated_at) => Some(updated_at.to_string()),
-            None => None
-        }
+            None => None,
+        },
     })
 }
 
@@ -95,27 +90,21 @@ pub async fn update_activity_by_id(
             "update activities set title = ? where id = ?",
             form.title.inner_ref().clone(),
             activity_id
-        )
+        ),
     };
 
-    let _query = query
-    .execute(pool)
-    .await
-    .map_err(|e| {
+    let _query = query.execute(pool).await.map_err(|e| {
         tracing::error!("Failed to execute query: {:?}", e);
         e
     })?;
 
-    let record = sqlx::query!(
-        "select * from activities where id = ?",
-        activity_id
-    )
-    .fetch_one(pool)
-    .await
-    .map_err(|e| {
-        tracing::error!("Failed to execute query: {:?}", e);
-        e
-    })?;
+    let record = sqlx::query!("select * from activities where id = ?", activity_id)
+        .fetch_one(pool)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to execute query: {:?}", e);
+            e
+        })?;
 
     Ok(Activity {
         id: record.id,
@@ -124,35 +113,26 @@ pub async fn update_activity_by_id(
         created_at: record.created_at.to_string(),
         updated_at: match record.updated_at {
             Some(updated_at) => Some(updated_at.to_string()),
-            None => None
-        }
+            None => None,
+        },
     })
 }
 
-pub async fn delete_activity_by_id(
-    activity_id: i32,
-    pool: &MySqlPool,
-) -> Result<(), sqlx::Error> {
-    let _record = sqlx::query!(
-        "select * from activities where id = ?",
-        activity_id
-    )
-    .fetch_one(pool)
-    .await
-    .map_err(|e| {
-        tracing::error!("Failed to execute query: {:?}", e);
-        e
-    })?;
-    sqlx::query!(
-        "delete from activities where id = ?",
-        activity_id
-    )
-    .execute(pool)
-    .await
-    .map_err(|e| {
-        tracing::error!("Failed to execute query: {:?}", e);
-        e
-    })?;
+pub async fn delete_activity_by_id(activity_id: i32, pool: &MySqlPool) -> Result<(), sqlx::Error> {
+    let _record = sqlx::query!("select * from activities where id = ?", activity_id)
+        .fetch_one(pool)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to execute query: {:?}", e);
+            e
+        })?;
+    sqlx::query!("delete from activities where id = ?", activity_id)
+        .execute(pool)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to execute query: {:?}", e);
+            e
+        })?;
 
     Ok(())
 }
@@ -162,12 +142,12 @@ pub async fn insert_activity(
     form: &NewActivity,
 ) -> Result<Activity, sqlx::Error> {
     let utc_now = Utc::now();
-    
+
     let query = sqlx::query!(
         r#"
         insert into activities (title, email, created_at, updated_at)
         values (?, ?, ?, ?)
-        "#, 
+        "#,
         form.title.inner_ref().clone(),
         form.email.clone(),
         utc_now.clone(),
@@ -185,6 +165,6 @@ pub async fn insert_activity(
         title: form.title.inner_ref().into(),
         email: form.email.clone(),
         created_at: utc_now.to_string(),
-        updated_at: Some(utc_now.to_string())
+        updated_at: Some(utc_now.to_string()),
     })
 }

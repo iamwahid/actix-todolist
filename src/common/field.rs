@@ -27,12 +27,12 @@ impl TitleField {
 #[derive(serde::Serialize)]
 pub struct Response {
     pub status: String,
-    pub message: String
+    pub message: String,
 }
 
 #[derive(serde::Serialize)]
 pub struct ResponseWithData<T> {
     pub status: String,
     pub message: String,
-    pub data: T
+    pub data: T,
 }

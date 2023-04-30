@@ -1,9 +1,9 @@
 mod health_check;
 // mod subscriptions;
-mod todo;
 mod activity;
+mod todo;
 
 pub use health_check::*;
 // pub use subscriptions::*;
-pub use todo::*;
 pub use activity::*;
+pub use todo::*;

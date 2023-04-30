@@ -1,6 +1,6 @@
-use chrono::{Utc, NaiveDateTime};
-use sqlx::MySqlPool;
 use crate::common::TitleField;
+use chrono::{NaiveDateTime, Utc};
+use sqlx::MySqlPool;
 
 pub fn default_as_true() -> bool {
     true
@@ -18,9 +18,9 @@ pub struct Todo {
     activity_group_id: i32,
     #[serde(default = "default_as_true")]
     is_active: Option<bool>,
-    #[serde(rename="createdAt")]
+    #[serde(rename = "createdAt")]
     created_at: String,
-    #[serde(rename="updatedAt")]
+    #[serde(rename = "updatedAt")]
     updated_at: Option<String>,
 }
 
@@ -33,9 +33,8 @@ pub struct TodoTable {
     is_active: i8,
     created_at: NaiveDateTime,
     updated_at: Option<NaiveDateTime>,
-    r#deleted_at: Option<NaiveDateTime>
+    r#deleted_at: Option<NaiveDateTime>,
 }
-
 
 pub struct NewTodo {
     pub title: TitleField,
@@ -57,59 +56,54 @@ pub async fn get_todos(
     pool: &MySqlPool,
 ) -> Result<Vec<Todo>, sqlx::Error> {
     let query = match activity_group_id {
-        Some(activity_group_id) => {
-            sqlx::query_as!(TodoTable, "select * from todos where activity_group_id = ?", activity_group_id)
-                .fetch_all(pool)
-                .await
-                .map_err(|e| {
-                    tracing::error!("Failed to execute query: {:?}", e);
-                    e
-                })?
-        },
-        None => {
-            sqlx::query_as!(TodoTable, "select * from todos")
-                .fetch_all(pool)
-                .await
-                .map_err(|e| {
-                    tracing::error!("Failed to execute query: {:?}", e);
-                    e
-                })?
-        }
+        Some(activity_group_id) => sqlx::query_as!(
+            TodoTable,
+            "select * from todos where activity_group_id = ?",
+            activity_group_id
+        )
+        .fetch_all(pool)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to execute query: {:?}", e);
+            e
+        })?,
+        None => sqlx::query_as!(TodoTable, "select * from todos")
+            .fetch_all(pool)
+            .await
+            .map_err(|e| {
+                tracing::error!("Failed to execute query: {:?}", e);
+                e
+            })?,
     };
 
     let mut todos = Vec::<Todo>::new();
 
     for q in query {
-        todos.push(
-            Todo { 
-                id: q.id,
-                title: q.title,
-                activity_group_id: q.activity_group_id,
-                is_active: Some(q.is_active != 0),
-                priority: Some(q.priority),
-                created_at: q.created_at.to_string(),
-                updated_at: match q.updated_at {
-                    Some(updated_at) => Some(updated_at.to_string()),
-                    None => None
-                }
-            }
-        );
+        todos.push(Todo {
+            id: q.id,
+            title: q.title,
+            activity_group_id: q.activity_group_id,
+            is_active: Some(q.is_active != 0),
+            priority: Some(q.priority),
+            created_at: q.created_at.to_string(),
+            updated_at: match q.updated_at {
+                Some(updated_at) => Some(updated_at.to_string()),
+                None => None,
+            },
+        });
     }
 
     Ok(todos)
 }
 
-pub async fn get_todo_by_id(
-    todo_id: i32,
-    pool: &MySqlPool,
-) -> Result<Todo, sqlx::Error> {
+pub async fn get_todo_by_id(todo_id: i32, pool: &MySqlPool) -> Result<Todo, sqlx::Error> {
     let query = sqlx::query!("select * from todos where id = ?", todo_id)
-    .fetch_one(pool)
-    .await
-    .map_err(|e| {
-        tracing::error!("Failed to execute query: {:?}", e);
-        e
-    })?;
+        .fetch_one(pool)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to execute query: {:?}", e);
+            e
+        })?;
 
     Ok(Todo {
         id: query.id,
@@ -120,8 +114,8 @@ pub async fn get_todo_by_id(
         created_at: query.created_at.to_string(),
         updated_at: match query.updated_at {
             Some(updated_at) => Some(updated_at.to_string()),
-            None => None
-        }
+            None => None,
+        },
     })
 }
 
@@ -130,17 +124,13 @@ pub async fn update_todo_by_id(
     pool: &MySqlPool,
     form: &UpdateTodo,
 ) -> Result<Todo, sqlx::Error> {
-    let current_todo = sqlx::query!(
-        "select * from todos  where id = ?",
-        todo_id
-    )
+    let current_todo = sqlx::query!("select * from todos  where id = ?", todo_id)
         .fetch_one(pool)
         .await
         .map_err(|e| {
             tracing::error!("Failed to execute query: {:?}", e);
             e
         })?;
-
 
     let _query = match &form.title {
         Some(title) => sqlx::query!(
@@ -234,10 +224,7 @@ pub async fn update_todo_by_id(
             e
         })?;
 
-    let record = sqlx::query!(
-        "select * from todos where id = ?",
-        todo_id
-    )
+    let record = sqlx::query!("select * from todos where id = ?", todo_id)
         .fetch_one(pool)
         .await
         .map_err(|e| {
@@ -254,50 +241,38 @@ pub async fn update_todo_by_id(
         created_at: record.created_at.to_string(),
         updated_at: match record.updated_at {
             Some(updated_at) => Some(updated_at.to_string()),
-            None => None
-        }
+            None => None,
+        },
     })
 }
 
-pub async fn delete_todo_by_id(
-    todo_id: i32,
-    pool: &MySqlPool,
-) -> Result<(), sqlx::Error> {
-    let _record = sqlx::query!(
-        "select * from todos where id = ?",
-        todo_id
-    )
-    .fetch_one(pool)
-    .await
-    .map_err(|e| {
-        tracing::error!("Failed to execute query: {:?}", e);
-        e
-    })?;
-    sqlx::query!(
-        "delete from todos where id = ?",
-        todo_id
-    )
-    .execute(pool)
-    .await
-    .map_err(|e| {
-        tracing::error!("Failed to execute query: {:?}", e);
-        e
-    })?;
+pub async fn delete_todo_by_id(todo_id: i32, pool: &MySqlPool) -> Result<(), sqlx::Error> {
+    let _record = sqlx::query!("select * from todos where id = ?", todo_id)
+        .fetch_one(pool)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to execute query: {:?}", e);
+            e
+        })?;
+    sqlx::query!("delete from todos where id = ?", todo_id)
+        .execute(pool)
+        .await
+        .map_err(|e| {
+            tracing::error!("Failed to execute query: {:?}", e);
+            e
+        })?;
 
     Ok(())
 }
 
-pub async fn insert_todo(
-    pool: &MySqlPool,
-    form: &NewTodo,
-) -> Result<Todo, sqlx::Error> {
+pub async fn insert_todo(pool: &MySqlPool, form: &NewTodo) -> Result<Todo, sqlx::Error> {
     let utc_now = Utc::now();
-    
+
     let query = sqlx::query!(
         r#"
         insert into todos (title, activity_group_id, is_active, priority, created_at, updated_at)
         values (?, ?, ?, ?, ?, ?)
-        "#, 
+        "#,
         form.title.inner_ref().clone(),
         form.activity_group_id,
         form.is_active,
@@ -319,6 +294,6 @@ pub async fn insert_todo(
         is_active: form.is_active,
         priority: form.priority.clone(),
         created_at: utc_now.to_string(),
-        updated_at: Some(utc_now.to_string())
+        updated_at: Some(utc_now.to_string()),
     })
 }

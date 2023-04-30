@@ -1,9 +1,12 @@
-use actix_web::{get, patch, post, delete, web, Responder, HttpRequest, HttpResponse};
+use crate::common::{Response, ResponseWithData, TitleField};
+use crate::services::{
+    default_as_true, default_as_very_high, delete_todo_by_id, get_todo_by_id, get_todos,
+    insert_todo, update_todo_by_id,
+};
+use crate::services::{NewTodo, Todo, UpdateTodo};
+use actix_web::{delete, get, patch, post, web, HttpRequest, HttpResponse, Responder};
 use serde_json::{Map, Value};
 use sqlx::MySqlPool;
-use crate::common::{TitleField, Response, ResponseWithData};
-use crate::services::{Todo, UpdateTodo, NewTodo};
-use crate::services::{get_todos, insert_todo, get_todo_by_id, update_todo_by_id, delete_todo_by_id, default_as_true, default_as_very_high};
 
 #[derive(serde::Deserialize)]
 struct FormData {
@@ -29,14 +32,17 @@ struct Params {
     activity_group_id: Option<i32>,
 }
 
-
 #[get("/todo-items")]
-pub async fn todo_list(_req: HttpRequest, params: web::Query<Params>, pool: web::Data<MySqlPool>) -> HttpResponse {
+pub async fn todo_list(
+    _req: HttpRequest,
+    params: web::Query<Params>,
+    pool: web::Data<MySqlPool>,
+) -> HttpResponse {
     match get_todos(params.activity_group_id, &pool).await {
         Ok(data) => HttpResponse::Ok().json(ResponseWithData::<Vec<Todo>> {
             status: "Success".into(),
             message: "Success".into(),
-            data: data
+            data: data,
         }),
         Err(e) => {
             tracing::error!("Failed to execute query: {:?}", e);
@@ -50,7 +56,10 @@ pub async fn todo_create(form: web::Json<FormData>, pool: web::Data<MySqlPool>) 
     let title = match TitleField::parse(form.0.title.clone()) {
         Ok(title) => title,
         Err(_) => {
-            let error = Response{ status: "Bad Request".into(), message: "title cannot be null".into()};
+            let error = Response {
+                status: "Bad Request".into(),
+                message: "title cannot be null".into(),
+            };
             return HttpResponse::BadRequest().json(error);
         }
     };
@@ -58,7 +67,10 @@ pub async fn todo_create(form: web::Json<FormData>, pool: web::Data<MySqlPool>) 
     let activity_group_id = match form.0.activity_group_id {
         Some(activity_group_id) => activity_group_id,
         None => {
-            let error = Response{ status: "Bad Request".into(), message: "activity_group_id cannot be null".into()};
+            let error = Response {
+                status: "Bad Request".into(),
+                message: "activity_group_id cannot be null".into(),
+            };
             return HttpResponse::BadRequest().json(error);
         }
     };
@@ -70,12 +82,11 @@ pub async fn todo_create(form: web::Json<FormData>, pool: web::Data<MySqlPool>) 
         is_active: Some(form.0.is_active),
     };
 
-    match insert_todo(&pool, &activity).await
-    {
+    match insert_todo(&pool, &activity).await {
         Ok(data) => HttpResponse::Created().json(ResponseWithData::<Todo> {
             status: "Success".into(),
             message: "Success".into(),
-            data: data
+            data: data,
         }),
         Err(e) => {
             tracing::error!("Failed to execute query: {:?}", e);
@@ -91,17 +102,24 @@ pub async fn todo_detail(path: web::Path<i32>, pool: web::Data<MySqlPool>) -> Ht
         Ok(data) => HttpResponse::Ok().json(ResponseWithData::<Todo> {
             status: "Success".into(),
             message: "Success".into(),
-            data: data
+            data: data,
         }),
         Err(e) => {
             tracing::error!("Failed to execute query: {:?}", e);
-            HttpResponse::NotFound().json(Response{ status: "Not Found".into(), message: format!("Todo with ID {} Not Found", todo_id)})
+            HttpResponse::NotFound().json(Response {
+                status: "Not Found".into(),
+                message: format!("Todo with ID {} Not Found", todo_id),
+            })
         }
     }
 }
 
 #[patch("/todo-items/{todo_id}")] // <- define path parameters
-pub async fn todo_update(path: web::Path<i32>, form: web::Json<FormUpdateData>, pool: web::Data<MySqlPool>) -> HttpResponse {
+pub async fn todo_update(
+    path: web::Path<i32>,
+    form: web::Json<FormUpdateData>,
+    pool: web::Data<MySqlPool>,
+) -> HttpResponse {
     let todo_id = path.into_inner();
     // let title = match TitleField::parse(form.0.title.clone()) {
     //     Ok(title) => title,
@@ -121,11 +139,14 @@ pub async fn todo_update(path: web::Path<i32>, form: web::Json<FormUpdateData>, 
         Ok(data) => HttpResponse::Ok().json(ResponseWithData::<Todo> {
             status: "Success".into(),
             message: "Success".into(),
-            data: data
+            data: data,
         }),
         Err(e) => {
             tracing::error!("Failed to execute query: {:?}", e);
-            HttpResponse::NotFound().json(Response{ status: "Not Found".into(), message: format!("Todo with ID {} Not Found", todo_id)})
+            HttpResponse::NotFound().json(Response {
+                status: "Not Found".into(),
+                message: format!("Todo with ID {} Not Found", todo_id),
+            })
         }
     }
 }
@@ -135,13 +156,16 @@ pub async fn todo_destroy(path: web::Path<i32>, pool: web::Data<MySqlPool>) -> i
     let todo_id = path.into_inner();
     match delete_todo_by_id(todo_id, &pool).await {
         Ok(_) => HttpResponse::Ok().json(ResponseWithData::<Map<String, Value>> {
-                status: "Success".into(),
-                message: "Success".into(),
-                data: Map::<String, Value>::new()
+            status: "Success".into(),
+            message: "Success".into(),
+            data: Map::<String, Value>::new(),
         }),
         Err(e) => {
             tracing::error!("Failed to execute query: {:?}", e);
-            HttpResponse::NotFound().json(Response{ status: "Not Found".into(), message: format!("Todo with ID {} Not Found", todo_id)})
+            HttpResponse::NotFound().json(Response {
+                status: "Not Found".into(),
+                message: format!("Todo with ID {} Not Found", todo_id),
+            })
         }
     }
 }
