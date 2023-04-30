@@ -31,7 +31,7 @@ struct Params {
 
 
 #[get("/todo-items")]
-pub async fn todo_list(req: HttpRequest, params: web::Query<Params>, pool: web::Data<MySqlPool>) -> HttpResponse {
+pub async fn todo_list(_req: HttpRequest, params: web::Query<Params>, pool: web::Data<MySqlPool>) -> HttpResponse {
     match get_todos(params.activity_group_id, &pool).await {
         Ok(data) => HttpResponse::Ok().json(ResponseWithData::<Vec<Todo>> {
             status: "Success".into(),

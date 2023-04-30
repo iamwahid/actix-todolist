@@ -5,6 +5,6 @@ pub async fn greet(req: HttpRequest) -> impl Responder {
     format!("Hello {}!", &name)
 }
 
-pub async fn health_check(req: HttpRequest) -> HttpResponse {
+pub async fn health_check(_req: HttpRequest) -> HttpResponse {
     HttpResponse::Ok().finish()
 }

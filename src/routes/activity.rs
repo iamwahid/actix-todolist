@@ -1,4 +1,4 @@
-use actix_web::{get, patch, post, delete, web, Responder, HttpRequest, HttpResponse};
+use actix_web::{get, patch, post, delete, web, HttpRequest, HttpResponse};
 use serde_json::{Map, Value};
 use sqlx::MySqlPool;
 use crate::common::{TitleField, Response, ResponseWithData};
